@@ -3,7 +3,18 @@
 {% block body %}
     <h2>Active Listings</h2>
 
-        {% for listing in all_listings %}
+    <form action="{% url 'filter'%}" method="POST" class="my-4">
+        {% csrf_token %}
+        <label class="form-label">Filter by category</label>
+            <select name="category" id="category">
+                {% for category in categories %}
+                    <option value="{{ category }}">{{ category }}</option>
+                {% endfor %}
+            </select>
+        <button type="submit" class="btn btn-primary" style="font-size: 12px; padding: 5px;">Filter</button>
+    </form>
+
+    {% for listing in all_listings %}
         <div class="row mx-3">
             <div class="card" style="width: 18rem;">
                 <img src="{{ listing.image }}" class="card-img-top" alt="{{ listing.title }}" style="height: 300px; object-fit: cover;">
