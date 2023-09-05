@@ -4,6 +4,7 @@
     <h2>Create New Listing</h2>
 
     <form action="{% url 'create' %}" method="POST">
+        {% csrf_token %}
         <div class="mb-3">
             <label for="title" class="form-label">Title</label>
             <input type="text" class="form-control" id="title" name="title" placeholder="Enter title">
@@ -25,7 +26,7 @@
         <div class="form-group">
             <select name="category" id="category">
                 {% for category in categories %}
-                    <option>{{ category }}</option>
+                    <option value="{{ category }}">{{ category }}</option>
                 {% endfor %}
             </select>
         </div>

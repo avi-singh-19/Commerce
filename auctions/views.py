@@ -69,3 +69,27 @@ def create_listing(request):
         return render(request, "auctions/create_listing.html", {
             "categories": Category.objects.all()
         })
+    else:
+        user = request.user
+        title = request.POST["title"]
+        price = request.POST["price"]
+        description = request.POST["description"]
+        image = request.POST["image"]
+        category = request.POST["category"]
+
+        category_name = Category.objects.get(category_name=category)
+
+        new_listing = Listing(
+            title=title,
+            price=float(price),
+            description=description,
+            image=image,
+            category=category_name,
+            seller=user
+        )
+        new_listing.save()
+
+        return HttpResponseRedirect(reverse(index))
+
+
+
