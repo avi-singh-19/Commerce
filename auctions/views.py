@@ -9,7 +9,9 @@ from .models import User
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    return render(request, "auctions/index.html",{
+        "all_listings": Listing.objects.filter(active=True).all()
+    })
 
 
 def login_view(request):
