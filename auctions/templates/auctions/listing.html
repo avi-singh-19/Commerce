@@ -1,0 +1,21 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    <h1 class="my-4" style="text-align: center;">{{ listing.title }}</h1>
+
+    <div class="container text-center">
+      <div class="row">
+        <div class="col">
+            <img src="{{ listing.image }}" alt="{{ listing.title }}" height="400px">
+        </div>
+        <div class="col">
+            <p>{{ listing.description }}</p>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="my-4" style="text-align: center;">Price: £{{ listing.price | floatformat:2 }}</h2>
+    <p style="font-weight: bold; text-align: center;">Seller: {{ listing.seller }}</p>
+
+{% endblock %}

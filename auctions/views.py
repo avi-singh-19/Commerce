@@ -103,3 +103,9 @@ def filter(request):
         "all_listings": Listing.objects.filter(active=True, category=filtered_items).all(),
         "categories": Category.objects.all()
     })
+
+
+def listing(request, id):
+    return render(request, "auctions/listing.html", {
+        "listing": Listing.objects.get(pk=id)
+    })

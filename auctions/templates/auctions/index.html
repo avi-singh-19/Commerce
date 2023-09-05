@@ -15,13 +15,14 @@
     </form>
 
     {% for listing in all_listings %}
-        <div class="row mx-3">
-            <div class="card" style="width: 18rem;">
-                <img src="{{ listing.image }}" class="card-img-top" alt="{{ listing.title }}" style="height: 300px; object-fit: cover;">
+        <div class="card-container">
+            <div class="card" style="width: 18rem">
+                <img src="{{ listing.image }}" class="card-img-top" alt="{{ listing.title }}" style="height: 400px; object-fit: cover;">
                 <div class="card-body d-flex flex-column">
                 <h5 class="card-title">{{ listing.title }}</h5>
                 <p class="card-text">{{ listing.description | truncatechars:100 }}</p>
-                <a href="#" class="btn btn-primary mt-auto" style="position: relative;">See more</a>
+                <p class="card-text" style="position: sticky; font-weight: bold;">£{{ listing.price | floatformat:0 }}</p>
+                <a href="{% url 'listing' id=listing.id %}" class="btn btn-primary mt-auto" style="position: relative;">See more</a>
             </div>
         </div>
     {% endfor %}
