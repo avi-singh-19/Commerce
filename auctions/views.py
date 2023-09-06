@@ -101,14 +101,15 @@ def filter(request):
         filtered_items = Category.objects.get(category_name=selected_filter)
     return render(request, "auctions/index.html", {
         "all_listings": Listing.objects.filter(active=True, category=filtered_items).all(),
-        "categories": Category.objects.all()
+        "categories": Category.objects.all(),
     })
 
 
 def listing(request, id):
     return render(request, "auctions/listing.html", {
         "listing": Listing.objects.get(pk=id),
-        "listing_in_watchlist": request.user in Listing.objects.get(pk=id).watchlist.all()
+        "listing_in_watchlist": request.user in Listing.objects.get(pk=id).watchlist.all(),
+        "comments": Comment.objects.filter(listing=Listing.objects.get(pk=id))
     })
 
 
@@ -131,3 +132,13 @@ def display_watchlist(request):
         "user": request.user,
         "all_listings": request.user.watchlist.all()
     })
+
+
+def add_comment(request, id):
+    new_comment = Comment(
+        commenter=request.user,
+        listing=Listing.objects.get(pk=id),
+        message=request.POST['new_comment']
+    )
+    new_comment.save()
+    return HttpResponseRedirect(reverse("listing", args={id, }))

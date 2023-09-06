@@ -32,4 +32,34 @@
         {% endif %}
     </div>
 
+    <br>
+
+    <div class="d-flex justify-content-center">
+    {% if user.is_authenticated %}
+        <form action="{% url 'comment' id=listing.id %}" method="POST">
+            {% csrf_token %}
+            <div class="input-group mb-3">
+                <input type="text" name="new_comment" class="form-control" style="width: 80%;" placeholder="Add comment">
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </div>
+            </div>
+        </form>
+    {% endif %}
+</div>
+
+
+
+    <br>
+
+    <ul class="list-group">
+        {% for comment in comments %}
+            <li class='list-group-item'>
+                {{ comment.message }}
+                <br/>
+                Posted by <strong>{{ comment.commenter }}</strong>
+            </li>
+        {% endfor %}
+    </ul>
+
 {% endblock %}
