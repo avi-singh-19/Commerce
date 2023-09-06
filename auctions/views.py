@@ -9,7 +9,7 @@ from .models import User
 
 
 def index(request):
-    return render(request, "auctions/index.html",{
+    return render(request, "auctions/index.html", {
         "all_listings": Listing.objects.filter(active=True).all(),
         "categories": Category.objects.all()
     })
@@ -99,7 +99,7 @@ def filter(request):
     if request.method == "POST":
         selected_filter = request.POST["category"]
         filtered_items = Category.objects.get(category_name=selected_filter)
-    return render(request, "auctions/index.html",{
+    return render(request, "auctions/index.html", {
         "all_listings": Listing.objects.filter(active=True, category=filtered_items).all(),
         "categories": Category.objects.all()
     })
@@ -107,5 +107,27 @@ def filter(request):
 
 def listing(request, id):
     return render(request, "auctions/listing.html", {
-        "listing": Listing.objects.get(pk=id)
+        "listing": Listing.objects.get(pk=id),
+        "listing_in_watchlist": request.user in Listing.objects.get(pk=id).watchlist.all()
+    })
+
+
+def remove_from_watchlist(request, id):
+    listing = Listing.objects.get(pk=id)
+    user = request.user
+    listing.watchlist.remove(user)
+    return HttpResponseRedirect(reverse("listing", args={id, }))
+
+
+def add_to_watchlist(request, id):
+    listing = Listing.objects.get(pk=id)
+    user = request.user
+    listing.watchlist.add(user)
+    return HttpResponseRedirect(reverse("listing", args={id, }))
+
+
+def display_watchlist(request):
+    return render(request, "auctions/watchlist.html", {
+        "user": request.user,
+        "all_listings": request.user.watchlist.all()
     })
