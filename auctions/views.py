@@ -82,9 +82,12 @@ def create_listing(request):
 
         category_name = Category.objects.get(category_name=category)
 
+        bid = Bid(bid=float(price), user=user)
+        bid.save()
+
         new_listing = Listing(
             title=title,
-            price=float(price),
+            price=bid,
             description=description,
             image=image,
             category=category_name,
@@ -142,3 +145,26 @@ def add_comment(request, id):
     )
     new_comment.save()
     return HttpResponseRedirect(reverse("listing", args={id, }))
+
+
+def add_bid(request, id):
+    newBid = request.POST['new_bid']
+    listing = Listing.objects.get(pk=id)
+
+    if int(newBid) > listing.price.bid:
+        updated_bid = Bid(user=request.user, bid=int(newBid))
+        updated_bid.save()
+        listing.price = updated_bid
+        listing.save()
+        return render(request, "auctions/listing.html",{
+            "listing": listing,
+            "message": "Bid was placed successfully",
+            "update": True
+        })
+    else:
+        return render(request, "auctions/listing.html", {
+            "listing": listing,
+            "message": "Failed to place bid",
+            "update": True
+        })
+

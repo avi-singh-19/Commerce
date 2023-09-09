@@ -13,8 +13,16 @@ class Category(models.Model):
         return f"{self.category_name}"
 
 
+class Bid(models.Model):
+    bid = models.FloatField(default=0)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, related_name='user_bid', null=True)
+
+    def __str__(self):
+        return f"{self.bid})"
+
+
 class Listing(models.Model):
-    price = models.FloatField()
+    price = models.ForeignKey(Bid, on_delete=models.CASCADE, blank=True, related_name='bid_price', null=True)
     title = models.CharField(max_length=30)
     description = models.CharField(max_length=1000)
     image = models.CharField(max_length=1000)
