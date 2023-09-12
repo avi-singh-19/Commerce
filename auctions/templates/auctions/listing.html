@@ -22,7 +22,7 @@
       </div>
     </div>
 
-    <h2 class="my-4" style="text-align: center;">Current bid: £{{ listing.price.bid | floatformat:2 }}</h2>
+    <h2 class="my-4" style="text-align: center;">Current bid: £{{ listing.price.bid | floatformat:0 }}</h2>
     <p style="font-weight: bold; text-align: center;">Seller: {{ listing.seller }}</p>
     <p class="my-4 mx-4">{{ listing.description }}</p>
 

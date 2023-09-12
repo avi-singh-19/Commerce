@@ -159,12 +159,16 @@ def add_bid(request, id):
         return render(request, "auctions/listing.html",{
             "listing": listing,
             "message": "Bid was placed successfully",
-            "update": True
+            "update": True,
+            "listing_in_watchlist": request.user in Listing.objects.get(pk=id).watchlist.all(),
+            "comments": Comment.objects.filter(listing=Listing.objects.get(pk=id))
         })
     else:
         return render(request, "auctions/listing.html", {
             "listing": listing,
             "message": "Failed to place bid",
-            "update": True
+            "update": True,
+            "listing_in_watchlist": request.user in Listing.objects.get(pk=id).watchlist.all(),
+            "comments": Comment.objects.filter(listing=Listing.objects.get(pk=id))
         })
 
