@@ -109,10 +109,13 @@ def filter(request):
 
 
 def listing(request, id):
+    is_owner = request.user.username == Listing.objects.get(pk=id).seller.username
+
     return render(request, "auctions/listing.html", {
         "listing": Listing.objects.get(pk=id),
         "listing_in_watchlist": request.user in Listing.objects.get(pk=id).watchlist.all(),
-        "comments": Comment.objects.filter(listing=Listing.objects.get(pk=id))
+        "comments": Comment.objects.filter(listing=Listing.objects.get(pk=id)),
+        "is_owner": is_owner
     })
 
 
@@ -151,17 +154,20 @@ def add_bid(request, id):
     newBid = request.POST['new_bid']
     listing = Listing.objects.get(pk=id)
 
+    is_owner = request.user.username == Listing.objects.get(pk=id).seller.username
+
     if int(newBid) > listing.price.bid:
         updated_bid = Bid(user=request.user, bid=int(newBid))
         updated_bid.save()
         listing.price = updated_bid
         listing.save()
-        return render(request, "auctions/listing.html",{
+        return render(request, "auctions/listing.html", {
             "listing": listing,
             "message": "Bid was placed successfully",
             "update": True,
             "listing_in_watchlist": request.user in Listing.objects.get(pk=id).watchlist.all(),
-            "comments": Comment.objects.filter(listing=Listing.objects.get(pk=id))
+            "comments": Comment.objects.filter(listing=Listing.objects.get(pk=id)),
+            "is_owner": is_owner
         })
     else:
         return render(request, "auctions/listing.html", {
@@ -169,6 +175,23 @@ def add_bid(request, id):
             "message": "Failed to place bid",
             "update": True,
             "listing_in_watchlist": request.user in Listing.objects.get(pk=id).watchlist.all(),
-            "comments": Comment.objects.filter(listing=Listing.objects.get(pk=id))
+            "comments": Comment.objects.filter(listing=Listing.objects.get(pk=id)),
+            "is_owner": is_owner
         })
 
+
+def close_auction(request, id):
+    listing_data = Listing.objects.get(pk=id)
+    listing_data.active = False
+    listing_data.save()
+
+    is_owner = request.user.username == Listing.objects.get(pk=id).seller.username
+
+    return render(request, "auctions/listing.html", {
+        "listing": Listing.objects.get(pk=id),
+        "listing_in_watchlist": request.user in Listing.objects.get(pk=id).watchlist.all(),
+        "comments": Comment.objects.filter(listing=Listing.objects.get(pk=id)),
+        "is_owner": is_owner,
+        "update": True,
+        "message": "Your auction is now closed"
+    })
